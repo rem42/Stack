@@ -1,41 +1,46 @@
-# Technical Documentation - Sylius TwigExtra
+# AI Contribution Guidelines - TwigExtra
 
-This document details the utility Twig extensions provided by the **Sylius TwigExtra** package. These tools simplify writing complex templates and improve testability.
+Guidelines for AI assistants contributing to the `TwigExtra` component of the Sylius Stack. This package provides **utility Twig extensions** to simplify complex template logic.
 
-## 1. Available Extensions (`src/TwigExtra/src/Twig/Extension`)
+## Reference Files
 
-### `MergeRecursiveExtension`
-- **Function:** `{{ array1|merge_recursive(array2) }}`
-- **Usage:** Recursively merges two arrays (unlike the standard Twig `merge` filter which overwrites keys). Essential for composing complex configurations or nested HTML attributes.
+When working on TwigExtra, check these files for patterns:
 
-### `RouteExistsExtension`
-- **Function:** `{{ sylius_route_exists('route_name') }}`
-- **Usage:** Checks if a route is defined in the Symfony router. Useful for conditionally displaying links (e.g., "Edit" button only if the edit route exists).
+### Extensions
+- Recursive Merge: `src/TwigExtra/src/Twig/Extension/MergeRecursiveExtension.php`
+- Route Existence: `src/TwigExtra/src/Twig/Extension/RouteExistsExtension.php`
+- Sorting: `src/TwigExtra/src/Twig/Extension/SortByExtension.php`
+- Test Attributes: `src/TwigExtra/src/Twig/Extension/TestHtmlAttributeExtension.php`
 
-### `SortByExtension`
-- **Filter:** `{{ collection|sort_by('property') }}`
-- **Usage:** Sorts an array of objects or associative arrays based on a given key or property.
+## General Guidelines
 
-### `TestFormAttributeExtension` & `TestHtmlAttributeExtension`
-- **Functions:** Helpers to generate `data-test-*` or `data-qa-*` attributes.
-- **Usage:** Standardize selectors for E2E tests (Playwright/Cypress) without polluting CSS classes.
-  - E.g.: `{{ test_html_attribute('submit-button') }}` -> `data-test="submit-button"`
+### Project Structure & Philosophy
 
----
+- **Utility Layer:** This package is a collection of helper functions and filters for Twig.
+- **Simplification:** It aims to reduce complex logic (e.g., sorting arrays) directly in templates.
+- **Testing:** It provides helpers (`test_html_attribute`) to standardize E2E testing selectors.
 
-## 2. UX Components (`src/TwigExtra/src/Twig/Ux`)
+### Dependencies
 
-### `ComponentTemplateFinder`
-- Internal utility to locate templates associated with Symfony UX components. Facilitates fluid integration between PHP components and their Twig views.
+- `twig/twig`: Core template engine.
+- `symfony/routing`: For route existence checks.
 
----
+## PHP Code
 
-## 3. Development Rules
+- **Strict Types:** `declare(strict_types=1);` is mandatory.
+- **Extension Logic:** Keep extension logic simple and focused on template manipulation.
+- **Performance:** Be mindful of performance implications (e.g., recursive merging large arrays).
 
-1.  **Usage:** Before writing complex logic in a template (e.g., sorting loops, route verification), check if an extension here already does the job.
-2.  **Performance:** Be careful with `merge_recursive` on very large arrays within critical loops.
-3.  **Tests:** Systematically use test attributes (`test_html_attribute`) for key interactive elements (buttons, inputs) to make functional tests robust against design changes.
+## Templates and Hooks
 
----
+- **Using Extensions:**
+  - `{{ array1|merge_recursive(array2) }}`
+  - `{{ collection|sort_by('property') }}`
+  - `{{ sylius_route_exists('route_name') }}`
+  - `{{ test_html_attribute('selector') }}`
 
-**Note for AI:** If you need to generate Twig templates for the admin interface, remember to use `sort_by` for lists and `sylius_route_exists` for contextual actions.
+## Common Mistakes to Avoid
+
+- **Reimplementing Logic:** Check existing extensions before writing custom Twig logic.
+- **Hardcoding Test Selectors:** Always use `test_html_attribute()` instead of manual `data-test=""`.
+- **Inefficient Sorting:** Avoid sorting large collections directly in Twig if possible (prefer database queries).

@@ -1,21 +1,38 @@
-# Technical Documentation - Sylius UiTranslations
+# AI Contribution Guidelines - UiTranslations
 
-This document details the internationalization (i18n) conventions provided by the **Sylius UiTranslations** package. It centralizes common labels for the administration interface.
+Guidelines for AI assistants contributing to the `UiTranslations` component of the Sylius Stack. This package provides the **centralized translation catalog** (i18n) for the admin interface.
 
-## 1. Structure
+## Reference Files
 
-**Translation Files:** `translations/messages.[lang].yaml`
-- Contain standard translation keys.
-- Default domain: `messages`.
+When working on UiTranslations, check these files for patterns:
 
-## 2. Naming Conventions
+### Translation Files
+- French (Default): `src/UiTranslations/translations/messages.fr.yaml`
+- English: `src/UiTranslations/translations/messages.en.yaml`
+- Spanish: `src/UiTranslations/translations/messages.es.yaml`
+- German: `src/UiTranslations/translations/messages.de.yaml`
 
-Keys must follow a logical hierarchical structure to ensure consistency:
+## General Guidelines
 
-`sylius.ui.[context].[action_or_element]`
+### Project Structure & Philosophy
 
-### Common Examples
-- **CRUD Actions:**
+- **Centralized Keys:** This package acts as the single source of truth for common admin UI labels (`sylius.ui.*`).
+- **Convention-Based:** Keys follow a strictly defined hierarchy (`context.action`).
+- **Language Pivot:** English (`messages.en.yaml`) is the pivot language for new keys.
+
+### Dependencies
+
+- `symfony/translation`: Translation component.
+
+## PHP Code
+
+- **Strict Types:** `declare(strict_types=1);` is mandatory (if PHP classes are added).
+- **Service Configuration:** Configuration is minimal (translation files loaded by Symfony).
+
+## Translation Keys & Conventions
+
+- **Pattern:** `sylius.ui.[context].[action_or_element]`
+- **Common Examples:**
   - `sylius.ui.create`: "Create"
   - `sylius.ui.update`: "Update"
   - `sylius.ui.delete`: "Delete"
@@ -23,27 +40,9 @@ Keys must follow a logical hierarchical structure to ensure consistency:
   - `sylius.ui.cancel`: "Cancel"
   - `sylius.ui.save_changes`: "Save changes"
 
-- **General Interface:**
-  - `sylius.ui.dashboard`: "Dashboard"
-  - `sylius.ui.login`: "Login"
-  - `sylius.ui.logout`: "Logout"
-  - `sylius.ui.success`: "Success"
-  - `sylius.ui.error`: "Error"
+## Common Mistakes to Avoid
 
-- **Forms:**
-  - `sylius.ui.username`: "Username"
-  - `sylius.ui.password`: "Password"
-
----
-
-## 3. Development Rules
-
-1.  **Reuse:** Before creating a new key, check if a generic key already exists (e.g., `sylius.ui.save` instead of `app.ui.save_product`).
-2.  **Hardcoding Forbidden:** Never write hardcoded text in Twig templates or controllers. Always use the `trans` filter (`|trans`) or the Translator service.
-    - Bad: `<button>Save</button>`
-    - Good: `<button>{{ 'sylius.ui.save'|trans }}</button>`
-3.  **Adding Keys:** If a new key is necessary, add it first to `messages.en.yaml` (pivot language), then to other languages if possible.
-
----
-
-**Note for AI:** When generating code (templates or forms), systematically use these translation keys to ensure the interface is multilingual from the start.
+- **Hardcoding Text:** Never write user-visible text directly in templates. Use translation keys.
+- **Duplicating Keys:** Check if a generic key (e.g., `sylius.ui.save`) exists before creating a specific one.
+- **Inconsistent Naming:** Follow the `sylius.ui.*` pattern strictly.
+- **Missing Translations:** Ensure new keys are added to at least English and French files.

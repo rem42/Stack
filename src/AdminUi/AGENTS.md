@@ -1,64 +1,50 @@
-# Technical Documentation - Sylius AdminUi
+# AI Contribution Guidelines - AdminUi
 
-This document details the architecture and components of the **Sylius AdminUi** package. It complements the root documentation for specific developments within this module.
+Guidelines for AI assistants contributing to the `AdminUi` component of the Sylius Stack. This package provides the **logical foundation** (contracts, basic routes, form types) for the admin interface, without any visual implementation.
 
-## 1. Module Overview
+## Reference Files
 
-**Role:**
-Provides the logical and structural skeleton of the administration interface. It is **CSS framework agnostic** (styling is handled by `BootstrapAdminUi` or other implementations). It defines contracts, basic routes (login, dashboard), and the structure of CRUD templates.
+When working on AdminUi, check these files for patterns:
 
-**Key Dependencies:**
-- `knplabs/knp-menu-bundle`: Menu management.
-- `sylius/twig-hooks`: Hook system for content injection.
-- `symfony/security-bundle`: Authentication management.
+### Core Logic
+- Login Controller: `src/AdminUi/src/Symfony/Controller/LoginController.php`
+- Menu Builder Interface: `src/AdminUi/src/Knp/Menu/MenuBuilderInterface.php`
+- Form Types: `src/AdminUi/src/Symfony/Form/Type/LoginType.php`
 
----
+### Abstract Templates
+- Base Layout: `src/AdminUi/templates/base.html.twig`
+- Dashboard: `src/AdminUi/templates/dashboard/index.html.twig`
+- CRUD Index: `src/AdminUi/templates/crud/index.html.twig`
 
-## 2. Internal Structure (`src/AdminUi/src`)
+## General Guidelines
 
-### `Knp/` (Menus)
-- **`Menu/MenuBuilderInterface.php`**: Contract for building the main menu.
-- **`Menu/MenuBuilder.php`**: Base implementation.
-  - **Rule:** To add items to the menu, use the Decorator pattern on the `sylius_admin_ui.knp.menu_builder` service.
+### Project Structure & Philosophy
 
-### `Symfony/` (Framework Integration)
-- **`Controller/LoginController.php`**: Handles the display of the login form (`sylius_admin_ui_login`) and logout.
-- **`Form/Type/LoginType.php`**: Standard login form (`_username`, `_password` fields).
-- **`DependencyInjection/`**: Bundle configuration.
-  - Loads services from `config/services.php`.
+- **CSS Agnostic:** This package **must not** contain any CSS framework classes (Bootstrap, Tailwind). It defines only the HTML structure and logic.
+- **Contract-First:** Define interfaces for critical services (e.g., MenuBuilder) to allow implementation by other bundles (BootstrapAdminUi).
+- **Extensible:** Use Twig Hooks liberally to allow downstream packages to inject content.
 
-### `Twig/` (Extensions)
-- **`Extension/RedirectPathExtension.php`**: Provides functions to handle redirects after CRUD actions.
+### Dependencies
 
-### `TwigHooks/` (Hooks Integration)
-- **`Hookable/Metadata/RoutingHookableMetadataFactory.php`**: Allows defining hooks based on current routing (page context).
+- `knplabs/knp-menu-bundle`: Menu structure.
+- `sylius/twig-hooks`: Content injection mechanism.
+- `symfony/security-bundle`: Authentication logic.
 
----
+## PHP Code
 
-## 3. Templates (`src/AdminUi/templates`)
+- **Strict Types:** `declare(strict_types=1);` is mandatory.
+- **Service Configuration:** Use PHP attributes (`#[AsDecorator]`, `#[Route]`) where possible, but core services may be defined in `config/services.php` for clarity.
+- **Route Naming:** All routes defined in this package must be prefixed with `sylius_admin_ui_` to avoid conflicts.
+  - Example: `sylius_admin_ui_login`, `sylius_admin_ui_dashboard`.
 
-This module provides **abstract** or skeleton templates:
+## Templates and Hooks
 
-- **`base.html.twig`**: Root layout defining main blocks (`title`, `stylesheets`, `javascripts`, `body`).
-- **`dashboard/index.html.twig`**: Default homepage.
-- **`security/login.html.twig`**: Login page.
-- **`crud/`**: Generic templates for CRUD operations (Create, Read, Update, Delete).
-  - `index.html.twig`
-  - `create.html.twig`
-  - `update.html.twig`
-  - `show.html.twig`
+- **Hook Definition:** Use `{% hook 'sylius_admin.dashboard.content' %}` to define insertion points.
+- **No Hardcoded Content:** Avoid putting static text or specific HTML elements that dictate a visual style.
+- **Translations:** Use `|trans` filter with keys starting with `sylius.ui.`.
 
-**Convention:** These templates intensively use **Twig Hooks** (`{% hook 'hook_name' %}`) to allow themes (like `BootstrapAdminUi`) to inject specific markup.
+## Common Mistakes to Avoid
 
----
-
-## 4. Development Rules
-
-1.  **CSS Agnosticism:** Never include specific CSS classes (Bootstrap, Tailwind) in this module's templates, unless they are purely utilitarian and standardized. Styling must be provided by the parent theme or implementation bundle.
-2.  **Extensibility:** Any new template must expose clear hooks to allow customization.
-3.  **Interface Contracts:** Always prefer injecting interfaces (e.g., `MenuBuilderInterface`) rather than concrete classes.
-4.  **Route Naming:** Prefix all routes with `sylius_admin_ui_`.
-
----
-
-**Note for AI:** When modifying this module, keep in mind that it serves as a foundation. Changes here impact all visual implementations (BootstrapAdminUi, etc.).
+- **Adding CSS Classes:** Do not add `class="btn btn-primary"` here. This belongs in `BootstrapAdminUi`.
+- **Hardcoding Links:** Use route names (`sylius_admin_ui_*`).
+- **Ignoring Security:** Ensure controllers and routes are protected by the firewall configuration (usually handled in the main app config, but be aware of `ROLE_ADMIN`).

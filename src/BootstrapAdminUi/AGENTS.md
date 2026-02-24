@@ -1,73 +1,64 @@
-# Technical Documentation - Sylius BootstrapAdminUi
+# AI Contribution Guidelines - BootstrapAdminUi
 
-This document details the architecture and components of the **Sylius BootstrapAdminUi** package. It acts as the reference visual implementation for `AdminUi`, based on Bootstrap 5.
+Guidelines for AI assistants contributing to the `BootstrapAdminUi` component of the Sylius Stack. This package provides the **visual implementation** (templates, styles, assets) of the admin interface using Bootstrap 5.
 
-## 1. Module Overview
+## Reference Files
 
-**Role:**
-Provides concrete templates, styling (SCSS), and JavaScript behaviors (Stimulus) for the administration interface. It transforms the abstract structure of `AdminUi` into a functional and aesthetic user interface.
+When working on BootstrapAdminUi, check these files for patterns:
 
-**Key Technologies:**
-- **Bootstrap 5**: CSS Framework.
-- **Symfony UX**: Icons (`tabler`), Live Components.
-- **Stimulus**: JS interaction management.
-- **Webpack/AssetMapper**: Asset management.
+### Visual Implementation
+- Base Layout: `src/BootstrapAdminUi/templates/shared/layout/stylesheets.html.twig`
+- Dashboard Content: `src/BootstrapAdminUi/config/app/twig_hooks/dashboard/index.php`
+- Sidebar Menu: `src/BootstrapAdminUi/templates/shared/crud/common/sidebar/menu.html.twig`
 
----
+### Assets
+- Styles: `src/BootstrapAdminUi/assets/styles/main.scss`
+- Stimulus Controllers: `src/BootstrapAdminUi/assets/controllers/`
+- Configuration: `src/BootstrapAdminUi/config/app/twig_hooks/common/index.php`
 
-## 2. Internal Structure
+## General Guidelines
 
-### `assets/` (Frontend Sources)
-- **`controllers/`**: Theme-specific Stimulus controllers.
-- **`styles/`**: SCSS sources.
-  - `main.scss`: Entry point.
-  - `_variables.scss`: Bootstrap variable overrides.
-  - `_sidebar.scss`, `_navbar.scss`, etc.: Component styles.
-- **`scripts/`**: Utility JS scripts (non-Stimulus or initial).
+### Project Structure & Philosophy
 
-### `config/` (Configuration & Mapping)
-- **`app/twig_hooks/`**: **Integration Core**. This folder contains PHP files defining the mapping between abstract hooks (defined by `AdminUi` or the developer) and concrete templates in this bundle.
-  - E.g.: `common/index.php` maps the hook `sylius_admin.common.index.content` to `.../content.html.twig`.
+- **Visual Layer:** This package is responsible for all CSS and JavaScript related to the admin theme.
+- **Hook Mapping:** It maps abstract hooks from `AdminUi` to concrete templates.
+  - E.g., `sylius_admin.dashboard.content` -> `templates/dashboard/content.html.twig`.
+- **Bootstrap 5:** Use standard Bootstrap utility classes. Custom CSS should be minimal and placed in SCSS files.
 
-### `src/Twig/Component/`
-- **`UserDropdownComponent.php`**: Twig component for the user menu in the navbar.
+### Dependencies
 
----
+- `sylius/admin-ui`: The logical foundation.
+- `symfony/ux-icons`: Icon set (Tabler).
+- `symfony/ux-live-component`: Interactive components.
+- `symfony/stimulus-bundle`: Frontend logic.
 
-## 3. Templates (`templates/`)
+## PHP Code
 
-Templates are organized to be injected via the Hooks system.
+- **Strict Types:** `declare(strict_types=1);` is mandatory.
+- **Hook Configuration:** Use PHP configuration files in `config/app/twig_hooks/` to define hook mappings.
+- **Component Logic:** Twig Components (`src/BootstrapAdminUi/src/Twig/Component/`) encapsulate UI logic (e.g., User Dropdown).
 
-### `shared/layout/`
-- `stylesheets.html.twig`, `javascripts.html.twig`: Inclusion of compiled assets.
+## Templates and Hooks
 
-### `shared/crud/`
-- Implementation of standard CRUD views (Create, Index, Show, Update).
-- **`common/`**: Shared elements (Navbar, Sidebar, Flashes).
-  - `sidebar/menu.html.twig`: Rendering the KnpMenu with Bootstrap styling.
+- **Concrete Implementation:** Use HTML5 and Bootstrap classes.
+- **Icons:** Use `{{ ux_icon('tabler:icon-name') }}`.
+- **Stimulus Integration:** Add `data-controller="controller-name"` to interactive elements.
+- **Live Components:** Use `{{ component('LiveComponent:Name') }}` for complex interactions.
 
-### `shared/grid/`
-- Templates for **Sylius Grid Bundle**.
-- `action/`: Action buttons (Edit, Delete).
-- `filter/`: Filter widgets.
-- `field/`: Data field rendering.
+## JavaScript & CSS (Stimulus / Bootstrap)
 
-### `shared/helper/`
-- Reusable atomic components:
-  - `accordion.html.twig`
-  - `modal.html.twig`
-  - `table.html.twig`
+- **Stimulus Controllers:**
+  - Naming: `kebab-case` (e.g., `bulk-action-controller.js`).
+  - Use targets (`static targets = [...]`) to manipulate DOM.
+  - Use values (`static values = {...}`) to pass data from Twig.
+- **SCSS:**
+  - Import Bootstrap variables in `_variables.scss`.
+  - Use `rem` units for spacing/font-size.
+  - Avoid `!important`.
 
----
+## Common Mistakes to Avoid
 
-## 4. Development Rules
-
-1.  **Style Customization:** Do not modify `main.scss` directly if possible. Use SCSS variables to override the theme.
-2.  **Hook Mapping:** To change the appearance of a section without touching PHP code, modify the hook configuration in `config/packages/sylius_twig_hooks.yaml` (in the final application) to point to a new template.
-3.  **Icons:** Use `ux-icons` (default set `tabler`).
-    - E.g.: `{{ ux_icon('tabler:edit') }}`.
-4.  **Javascript:** Prioritize Stimulus controllers for all interactivity. Avoid jQuery or global vanilla JS.
-
----
-
-**Note for AI:** This module is the "skin". If asked to change a button color or sidebar layout, act here (SCSS or Templates). If asked to change redirection logic, do it in `AdminUi`.
+- **Modifying Abstract Templates:** Do not edit `src/AdminUi` templates for style changes. Edit `src/BootstrapAdminUi` templates instead.
+- **Hardcoding Styles:** Use Bootstrap classes first. Only use custom CSS if absolutely necessary.
+- **Missing Translations:** Always use `|trans` filter.
+- **Direct DOM Manipulation:** Use Stimulus controllers instead of inline `onclick` or jQuery.
