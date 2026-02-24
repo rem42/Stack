@@ -1,93 +1,93 @@
-# Documentation Technique - Google Antigravity
+# Technical Documentation - Google Antigravity
 
-Ce fichier sert de référence absolue pour le développement sur ce dépôt. Il décrit l'architecture, les conventions et les flux de données du projet **Sylius Stack**.
+This file serves as the absolute reference for development on this repository. It describes the architecture, conventions, and data flows of the **Sylius Stack** project.
 
-## 1. Présentation du Projet
+## 1. Project Overview
 
-**Mission :**
-Ce dépôt contient les composants nécessaires à la génération d'interfaces d'administration (back-office) robustes et découplées pour des applications Symfony. Il s'appuie sur une architecture modulaire permettant de composer des interfaces riches sans recourir à un framework SPA complet (React/Vue), en privilégiant **Symfony UX** et **Hotwire (Stimulus)**.
+**Mission:**
+This repository contains the components necessary to generate robust and decoupled administration interfaces (back-office) for Symfony applications. It relies on a modular architecture allowing the composition of rich interfaces without resorting to a full SPA framework (React/Vue), prioritizing **Symfony UX** and **Hotwire (Stimulus)**.
 
-**Stack Technique Actuelle :**
-- **Backend :** PHP 8.1+, Symfony 6.4/7.x (Components: HttpKernel, Security, DependencyInjection).
-- **Frontend :** Twig, Stimulus, Symfony UX (Live Component, Twig Component, Autocomplete, Icons).
-- **Architecture :** Monorepo modulaire (AdminUi, BootstrapAdminUi, TwigHooks).
+**Current Tech Stack:**
+- **Backend:** PHP 8.1+, Symfony 6.4/7.x (Components: HttpKernel, Security, DependencyInjection).
+- **Frontend:** Twig, Stimulus, Symfony UX (Live Component, Twig Component, Autocomplete, Icons).
+- **Architecture:** Modular Monorepo (AdminUi, BootstrapAdminUi, TwigHooks).
 
 ---
 
-## 2. Structure des Dossiers
+## 2. Directory Structure
 
-L'architecture est organisée en composants découplés dans `src/` :
+The architecture is organized into decoupled components within `src/`:
 
-### `src/` (Composants PHP)
-- **`AdminUi/`** : Cœur logique de l'interface admin. Fournit les routes génériques, la sécurité de base et les templates minimaux.
-- **`BootstrapAdminUi/`** : Implémentation visuelle utilisant Bootstrap 5. Dépend de `AdminUi`. Contient les assets spécifiques et l'intégration UX.
-- **`TwigHooks/`** : Système de hooks pour Twig permettant une composition flexible des layouts (zones de contenu dynamiques).
-- **`TwigExtra/`** : Extensions Twig supplémentaires pour le formatage et les utilitaires.
-- **`UiTranslations/`** : Catalogue de traductions pour l'interface.
+### `src/` (PHP Components)
+- **`AdminUi/`**: Logical core of the admin interface. Provides generic routes, basic security, and minimal templates.
+- **`BootstrapAdminUi/`**: Visual implementation using Bootstrap 5. Depends on `AdminUi`. Contains specific assets and UX integration.
+- **`TwigHooks/`**: Hook system for Twig allowing flexible layout composition (dynamic content zones).
+- **`TwigExtra/`**: Additional Twig extensions for formatting and utilities.
+- **`UiTranslations/`**: Translation catalog for the interface.
 
 ### `assets/` (Frontend)
-- **`app.js`** : Point d'entrée principal. Initialise Stimulus.
-- **`controllers/`** : Contrôleurs Stimulus.
-  - Configuration automatique via `@symfony/ux-live-component` et `@symfony/ux-autocomplete`.
-- **`styles/`** : Fichiers CSS/SCSS (Bootstrap surchargé).
+- **`app.js`**: Main entry point. Initializes Stimulus.
+- **`controllers/`**: Stimulus controllers.
+  - Automatic configuration via `@symfony/ux-live-component` and `@symfony/ux-autocomplete`.
+- **`styles/`**: CSS/SCSS files (Overridden Bootstrap).
 
-### `templates/` (Vues)
-- **`base/`** : Layouts globaux.
-- **`component/`** : Templates des Twig Components et Live Components.
-- **`[Entity]/`** : Templates CRUD spécifiques (ex: `book/`, `speaker/`).
+### `templates/` (Views)
+- **`base/`**: Global layouts.
+- **`component/`**: Templates for Twig Components and Live Components.
+- **`[Entity]/`**: Specific CRUD templates (e.g., `book/`, `speaker/`).
 
 ### `config/`
-- Configuration des bundles et des routes.
-- **`packages/security.yaml`** : Configuration du firewall `admin` (login, logout, provider).
+- Bundle and route configuration.
+- **`packages/security.yaml`**: Configuration of the `admin` firewall (login, logout, provider).
 
 ---
 
-## 3. Règles de Code et Conventions
+## 3. Code Rules and Conventions
 
 ### PHP / Symfony
-1.  **Typage Strict :** `declare(strict_types=1);` obligatoire dans tous les fichiers PHP.
-2.  **Attributs PHP 8 :** Utiliser les attributs pour la configuration.
-    - Routing : `#[Route('/path', name: 'app_route')]`
-    - Injection de Dépendances : Constructor Injection privilégiée.
-    - Live Components : `#[AsLiveComponent]`, `#[LiveProp(writable: true)]`, `#[LiveAction]`.
-3.  **Décoration de Services :** Pour étendre les fonctionnalités (ex: Menu), utiliser le pattern Décorateur.
+1.  **Strict Typing:** `declare(strict_types=1);` mandatory in all PHP files.
+2.  **PHP 8 Attributes:** Use attributes for configuration.
+    - Routing: `#[Route('/path', name: 'app_route')]`
+    - Dependency Injection: Constructor Injection preferred.
+    - Live Components: `#[AsLiveComponent]`, `#[LiveProp(writable: true)]`, `#[LiveAction]`.
+3.  **Service Decoration:** To extend functionalities (e.g., Menu), use the Decorator pattern.
     ```php
     #[AsDecorator(decorates: 'sylius_admin_ui.knp.menu_builder')]
     final readonly class MenuBuilder implements MenuBuilderInterface { ... }
     ```
-4.  **Contrôleurs :** Doivent rester maigres (Thin Controllers). Déléguer la logique métier aux Services ou Handlers.
+4.  **Controllers:** Must remain thin (Thin Controllers). Delegate business logic to Services or Handlers.
 
 ### Frontend (Twig / Stimulus / UX)
-1.  **Twig Components :** Privilégier les composants Twig pour les éléments réutilisables (boutons, cartes, tableaux).
-2.  **Live Components :** Utiliser pour les interactions dynamiques sans rechargement de page (recherche, formulaires complexes, filtres).
-    - Ne pas écrire de JavaScript manuel si un Live Component peut le gérer.
-3.  **Stimulus :**
-    - Nommage : `kebab-case` pour les contrôleurs.
-    - Utiliser `getComponent()` de `@symfony/ux-live-component` pour interagir avec le backend depuis JS.
-    - Cibles : Utiliser `static targets = [...] ` pour référencer les éléments DOM.
+1.  **Twig Components:** Prioritize Twig components for reusable elements (buttons, cards, tables).
+2.  **Live Components:** Use for dynamic interactions without page reload (search, complex forms, filters).
+    - Do not write manual JavaScript if a Live Component can handle it.
+3.  **Stimulus:**
+    - Naming: `kebab-case` for controllers.
+    - Use `getComponent()` from `@symfony/ux-live-component` to interact with the backend from JS.
+    - Targets: Use `static targets = [...] ` to reference DOM elements.
 
 ---
 
-## 4. Flux de Données
+## 4. Data Flow
 
-Le flux suit le modèle MVC amélioré par Symfony UX :
+The flow follows the MVC model enhanced by Symfony UX:
 
-1.  **Requête Initiale (HTTP GET) :**
-    - Le contrôleur Symfony reçoit la requête.
-    - Il prépare les données (via Doctrine/Services) et rend un template Twig.
-    - Twig génère le HTML initial, incluant les attributs `data-controller` pour Stimulus.
+1.  **Initial Request (HTTP GET):**
+    - The Symfony controller receives the request.
+    - It prepares data (via Doctrine/Services) and renders a Twig template.
+    - Twig generates the initial HTML, including `data-controller` attributes for Stimulus.
 
-2.  **Interactions Client (Frontend) :**
-    - **Actions Simples :** Gérées par des contrôleurs Stimulus (ex: toggle menu).
-    - **Actions Complexes (Data-Driven) :** Gérées par des **Live Components**.
-        - L'utilisateur interagit (ex: tape dans une recherche).
-        - Le composant Live envoie une requête AJAX automatique au backend.
-        - Le backend met à jour l'état du composant PHP (`#[LiveProp]`) et re-rend le template partiel.
-        - Le DOM est mis à jour intelligemment via Morphdom.
+2.  **Client Interactions (Frontend):**
+    - **Simple Actions:** Handled by Stimulus controllers (e.g., toggle menu).
+    - **Complex Actions (Data-Driven):** Handled by **Live Components**.
+        - User interacts (e.g., types in a search).
+        - The Live Component sends an automatic AJAX request to the backend.
+        - The backend updates the PHP component state (`#[LiveProp]`) and re-renders the partial template.
+        - The DOM is intelligently updated via Morphdom.
 
-3.  **Hooks Twig :**
-    - Les templates utilisent des hooks (`{% hook 'sidebar' %}`) pour permettre l'injection de contenu par d'autres bundles ou configurations, sans modifier le template parent.
+3.  **Twig Hooks:**
+    - Templates use hooks (`{% hook 'sidebar' %}`) to allow content injection by other bundles or configurations, without modifying the parent template.
 
 ---
 
-**Note pour l'IA :** Lors de la génération de code, vérifie toujours la compatibilité avec Symfony 6.4+ et l'utilisation des attributs PHP. Assure-toi que les Live Components sont correctement déclarés avec `#[AsLiveComponent]`.
+**Note for AI:** When generating code, always verify compatibility with Symfony 6.4+ and the use of PHP attributes. Ensure that Live Components are correctly declared with `#[AsLiveComponent]`.

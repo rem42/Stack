@@ -1,54 +1,54 @@
-# Documentation Technique - Sylius TwigHooks
+# Technical Documentation - Sylius TwigHooks
 
-Ce document détaille le fonctionnement interne du package **Sylius TwigHooks**. C'est le moteur de composition d'interface utilisé par toute la stack.
+This document details the internal workings of the **Sylius TwigHooks** package. It is the interface composition engine used throughout the stack.
 
-## 1. Concept Fondamental
+## 1. Core Concept
 
-**Problème :** Les héritages de templates Twig (`{% extends %}`) sont rigides. Modifier un bloc nécessite souvent de surcharger tout le fichier.
-**Solution :** TwigHooks introduit un système d'injection dynamique.
-- **Hook Point :** `{% hook 'nom_du_hook' %}` dans un template définit une zone d'insertion.
-- **Hookable :** Un élément (Template Twig ou Composant) configuré pour s'afficher dans un hook donné.
+**Problem:** Twig template inheritance (`{% extends %}`) is rigid. Modifying a block often requires overriding the entire file.
+**Solution:** TwigHooks introduces a dynamic injection system.
+- **Hook Point:** `{% hook 'hook_name' %}` in a template defines an insertion zone.
+- **Hookable:** An element (Twig Template or Component) configured to be displayed in a given hook.
 
 ---
 
-## 2. Architecture Interne (`src/TwigHooks/src`)
+## 2. Internal Architecture (`src/TwigHooks/src`)
 
-### `Twig/` (Extension Twig)
-- **`TokenParser/HookTokenParser.php`** : Compile le tag `{% hook %}`.
-- **`Runtime/HooksRuntime.php`** : Exécuté au rendu. Appelle le `HookRenderer`.
+### `Twig/` (Twig Extension)
+- **`TokenParser/HookTokenParser.php`**: Compiles the `{% hook %}` tag.
+- **`Runtime/HooksRuntime.php`**: Executed at render time. Calls the `HookRenderer`.
 
-### `Hook/` et `Hookable/`
-- **`Renderer/HookRenderer.php`** : Orchestre le rendu d'un hook.
-  1.  Récupère tous les *Hookables* configurés pour ce nom de hook.
-  2.  Trie les hookables par priorité.
-  3.  Rend chaque hookable séquentiellement.
-- **`Hookable/`** : Types d'éléments insérables.
-  - `HookableTemplate` : Un fichier `.html.twig`.
-  - `HookableComponent` : Un Twig Component ou Live Component.
-- **`Merger/`** : Gère la fusion des configurations (ex: écraser un hookable défini dans un bundle par une config locale).
+### `Hook/` and `Hookable/`
+- **`Renderer/HookRenderer.php`**: Orchestrates the rendering of a hook.
+  1.  Retrieves all configured *Hookables* for this hook name.
+  2.  Sorts hookables by priority.
+  3.  Renders each hookable sequentially.
+- **`Hookable/`**: Types of insertable elements.
+  - `HookableTemplate`: An `.html.twig` file.
+  - `HookableComponent`: A Twig Component or Live Component.
+- **`Merger/`**: Handles configuration merging (e.g., overriding a hookable defined in a bundle with a local config).
 
 ### `Bag/` (Context)
-- **`DataBag.php`** : Structure de données passée aux templates rendus par le hook. Permet de transmettre le contexte (ex: l'entité courante `resource`) du template parent vers les enfants injectés.
+- **`DataBag.php`**: Data structure passed to templates rendered by the hook. Allows passing context (e.g., the current entity `resource`) from the parent template to injected children.
 
 ### `Profiler/`
-- Intégration à la Web Debug Toolbar de Symfony pour inspecter les hooks rendus, leur ordre et leur temps d'exécution.
+- Integration with the Symfony Web Debug Toolbar to inspect rendered hooks, their order, and execution time.
 
 ---
 
-## 3. Utilisation et Configuration
+## 3. Usage and Configuration
 
-### Côté Template (Définition du point d'ancrage)
+### Template Side (Anchor Definition)
 ```twig
-{# Dans base.html.twig #}
+{# In base.html.twig #}
 <div class="sidebar">
     {% hook 'sylius_admin.sidebar' %}
 </div>
 ```
 
-### Côté Configuration (PHP/YAML)
-C'est ici que l'assemblage se fait. Le bundle lit la configuration pour savoir quoi mettre dans `sylius_admin.sidebar`.
+### Configuration Side (PHP/YAML)
+This is where assembly happens. The bundle reads the configuration to know what to put in `sylius_admin.sidebar`.
 
-Exemple théorique de structure interne (géré via `sylius_twig_hooks.yaml` dans l'app) :
+Theoretical example of internal structure (managed via `sylius_twig_hooks.yaml` in the app):
 ```php
 'sylius_admin.sidebar' => [
     'menu' => [
@@ -64,12 +64,12 @@ Exemple théorique de structure interne (géré via `sylius_twig_hooks.yaml` dan
 
 ---
 
-## 4. Règles de Développement
+## 4. Development Rules
 
-1.  **Performance :** Le rendu de hooks est rapide mais pas gratuit. Éviter d'imbriquer des hooks trop profondément (N+1 hooks).
-2.  **Contexte :** Les variables Twig du scope parent **ne sont pas** automatiquement passées aux enfants (contrairement à `include`). Il faut passer explicitement le contexte via le `DataBag` si nécessaire, ou configurer le hook pour accepter certaines variables contextuelles.
-3.  **Débuggage :** Utiliser la commande `bin/console debug:twig-hooks` ou le profiler Symfony pour comprendre pourquoi un bloc ne s'affiche pas.
+1.  **Performance:** Hook rendering is fast but not free. Avoid nesting hooks too deeply (N+1 hooks).
+2.  **Context:** Twig variables from the parent scope are **not** automatically passed to children (unlike `include`). Context must be explicitly passed via the `DataBag` if necessary, or the hook configured to accept specific contextual variables.
+3.  **Debugging:** Use the command `bin/console debug:twig-hooks` or the Symfony profiler to understand why a block is not displaying.
 
 ---
 
-**Note pour l'IA :** Ce bundle est de la pure infrastructure. Tu n'auras probablement pas à modifier le code PHP ici, mais tu devras comprendre comment *configurer* les hooks en utilisant les structures définies ici pour assembler les pages dans `AdminUi`/`BootstrapAdminUi`.
+**Note for AI:** This bundle is pure infrastructure. You will likely not need to modify the PHP code here, but you will need to understand how to *configure* hooks using the structures defined here to assemble pages in `AdminUi`/`BootstrapAdminUi`.

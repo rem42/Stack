@@ -1,41 +1,41 @@
-# Documentation Technique - Sylius TwigExtra
+# Technical Documentation - Sylius TwigExtra
 
-Ce document détaille les extensions Twig utilitaires fournies par le package **Sylius TwigExtra**. Ces outils simplifient l'écriture de templates complexes et améliorent la testabilité.
+This document details the utility Twig extensions provided by the **Sylius TwigExtra** package. These tools simplify writing complex templates and improve testability.
 
-## 1. Extensions Disponibles (`src/TwigExtra/src/Twig/Extension`)
+## 1. Available Extensions (`src/TwigExtra/src/Twig/Extension`)
 
 ### `MergeRecursiveExtension`
-- **Fonction :** `{{ array1|merge_recursive(array2) }}`
-- **Usage :** Fusionne deux tableaux de manière récursive (contrairement au filtre `merge` standard de Twig qui écrase les clés). Indispensable pour composer des configurations complexes ou des attributs HTML imbriqués.
+- **Function:** `{{ array1|merge_recursive(array2) }}`
+- **Usage:** Recursively merges two arrays (unlike the standard Twig `merge` filter which overwrites keys). Essential for composing complex configurations or nested HTML attributes.
 
 ### `RouteExistsExtension`
-- **Fonction :** `{{ sylius_route_exists('nom_route') }}`
-- **Usage :** Vérifie si une route est définie dans le routeur Symfony. Utile pour afficher conditionnellement des liens (ex: bouton "Edit" seulement si la route d'édition existe).
+- **Function:** `{{ sylius_route_exists('route_name') }}`
+- **Usage:** Checks if a route is defined in the Symfony router. Useful for conditionally displaying links (e.g., "Edit" button only if the edit route exists).
 
 ### `SortByExtension`
-- **Filtre :** `{{ collection|sort_by('propriete') }}`
-- **Usage :** Trie un tableau d'objets ou de tableaux associatifs selon une clé ou une propriété donnée.
+- **Filter:** `{{ collection|sort_by('property') }}`
+- **Usage:** Sorts an array of objects or associative arrays based on a given key or property.
 
 ### `TestFormAttributeExtension` & `TestHtmlAttributeExtension`
-- **Fonctions :** Helpers pour générer des attributs `data-test-*` ou `data-qa-*`.
-- **Usage :** Standardiser les sélecteurs pour les tests E2E (Playwright/Cypress) sans polluer les classes CSS.
-  - Ex: `{{ test_html_attribute('submit-button') }}` -> `data-test="submit-button"`
+- **Functions:** Helpers to generate `data-test-*` or `data-qa-*` attributes.
+- **Usage:** Standardize selectors for E2E tests (Playwright/Cypress) without polluting CSS classes.
+  - E.g.: `{{ test_html_attribute('submit-button') }}` -> `data-test="submit-button"`
 
 ---
 
-## 2. Composants UX (`src/TwigExtra/src/Twig/Ux`)
+## 2. UX Components (`src/TwigExtra/src/Twig/Ux`)
 
 ### `ComponentTemplateFinder`
-- Utilitaire interne pour localiser les templates associés aux composants Symfony UX. Facilite l'intégration fluide entre les composants PHP et leurs vues Twig.
+- Internal utility to locate templates associated with Symfony UX components. Facilitates fluid integration between PHP components and their Twig views.
 
 ---
 
-## 3. Règles de Développement
+## 3. Development Rules
 
-1.  **Utilisation :** Avant d'écrire une logique complexe dans un template (ex: boucles de tri, vérification de routes), vérifier si une extension ici ne fait pas déjà le travail.
-2.  **Performance :** Attention à `merge_recursive` sur de très gros tableaux dans des boucles critiques.
-3.  **Tests :** Utiliser systématiquement les attributs de test (`test_html_attribute`) pour les éléments interactifs clés (boutons, inputs) afin de rendre les tests fonctionnels robustes aux changements de design.
+1.  **Usage:** Before writing complex logic in a template (e.g., sorting loops, route verification), check if an extension here already does the job.
+2.  **Performance:** Be careful with `merge_recursive` on very large arrays within critical loops.
+3.  **Tests:** Systematically use test attributes (`test_html_attribute`) for key interactive elements (buttons, inputs) to make functional tests robust against design changes.
 
 ---
 
-**Note pour l'IA :** Si tu dois générer des templates Twig pour l'interface admin, pense à utiliser `sort_by` pour les listes et `sylius_route_exists` pour les actions contextuelles.
+**Note for AI:** If you need to generate Twig templates for the admin interface, remember to use `sort_by` for lists and `sylius_route_exists` for contextual actions.

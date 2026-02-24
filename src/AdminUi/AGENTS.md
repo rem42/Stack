@@ -1,64 +1,64 @@
-# Documentation Technique - Sylius AdminUi
+# Technical Documentation - Sylius AdminUi
 
-Ce document détaille l'architecture et les composants du package **Sylius AdminUi**. Il complète la documentation racine pour les développements spécifiques à ce module.
+This document details the architecture and components of the **Sylius AdminUi** package. It complements the root documentation for specific developments within this module.
 
-## 1. Présentation du Module
+## 1. Module Overview
 
-**Rôle :**
-Fournit le squelette logique et structurel de l'interface d'administration. Il est **agnostique du framework CSS** (le style est géré par `BootstrapAdminUi` ou d'autres implémentations). Il définit les contrats, les routes de base (login, dashboard) et la structure des templates CRUD.
+**Role:**
+Provides the logical and structural skeleton of the administration interface. It is **CSS framework agnostic** (styling is handled by `BootstrapAdminUi` or other implementations). It defines contracts, basic routes (login, dashboard), and the structure of CRUD templates.
 
-**Dépendances Clés :**
-- `knplabs/knp-menu-bundle` : Gestion des menus.
-- `sylius/twig-hooks` : Système de hooks pour l'injection de contenu.
-- `symfony/security-bundle` : Gestion de l'authentification.
+**Key Dependencies:**
+- `knplabs/knp-menu-bundle`: Menu management.
+- `sylius/twig-hooks`: Hook system for content injection.
+- `symfony/security-bundle`: Authentication management.
 
 ---
 
-## 2. Structure Interne (`src/AdminUi/src`)
+## 2. Internal Structure (`src/AdminUi/src`)
 
 ### `Knp/` (Menus)
-- **`Menu/MenuBuilderInterface.php`** : Contrat pour la construction du menu principal.
-- **`Menu/MenuBuilder.php`** : Implémentation de base.
-  - **Règle :** Pour ajouter des items au menu, utiliser le pattern Décorateur sur le service `sylius_admin_ui.knp.menu_builder`.
+- **`Menu/MenuBuilderInterface.php`**: Contract for building the main menu.
+- **`Menu/MenuBuilder.php`**: Base implementation.
+  - **Rule:** To add items to the menu, use the Decorator pattern on the `sylius_admin_ui.knp.menu_builder` service.
 
-### `Symfony/` (Intégration Framework)
-- **`Controller/LoginController.php`** : Gère l'affichage du formulaire de connexion (`sylius_admin_ui_login`) et la déconnexion.
-- **`Form/Type/LoginType.php`** : Formulaire de connexion standard (champs `_username`, `_password`).
-- **`DependencyInjection/`** : Configuration du bundle.
-  - Charge les services depuis `config/services.php`.
+### `Symfony/` (Framework Integration)
+- **`Controller/LoginController.php`**: Handles the display of the login form (`sylius_admin_ui_login`) and logout.
+- **`Form/Type/LoginType.php`**: Standard login form (`_username`, `_password` fields).
+- **`DependencyInjection/`**: Bundle configuration.
+  - Loads services from `config/services.php`.
 
 ### `Twig/` (Extensions)
-- **`Extension/RedirectPathExtension.php`** : Fournit des fonctions pour gérer les redirections après actions CRUD.
+- **`Extension/RedirectPathExtension.php`**: Provides functions to handle redirects after CRUD actions.
 
-### `TwigHooks/` (Intégration Hooks)
-- **`Hookable/Metadata/RoutingHookableMetadataFactory.php`** : Permet de définir des hooks basés sur le routing actuel (contexte de la page).
+### `TwigHooks/` (Hooks Integration)
+- **`Hookable/Metadata/RoutingHookableMetadataFactory.php`**: Allows defining hooks based on current routing (page context).
 
 ---
 
 ## 3. Templates (`src/AdminUi/templates`)
 
-Ce module fournit les templates **abstraits** ou squelettes :
+This module provides **abstract** or skeleton templates:
 
-- **`base.html.twig`** : Layout racine définissant les blocs principaux (`title`, `stylesheets`, `javascripts`, `body`).
-- **`dashboard/index.html.twig`** : Page d'accueil par défaut.
-- **`security/login.html.twig`** : Page de connexion.
-- **`crud/`** : Templates génériques pour les opérations CRUD (Create, Read, Update, Delete).
+- **`base.html.twig`**: Root layout defining main blocks (`title`, `stylesheets`, `javascripts`, `body`).
+- **`dashboard/index.html.twig`**: Default homepage.
+- **`security/login.html.twig`**: Login page.
+- **`crud/`**: Generic templates for CRUD operations (Create, Read, Update, Delete).
   - `index.html.twig`
   - `create.html.twig`
   - `update.html.twig`
   - `show.html.twig`
 
-**Convention :** Ces templates utilisent intensivement les **Twig Hooks** (`{% hook 'nom_du_hook' %}`) pour permettre aux thèmes (comme `BootstrapAdminUi`) d'injecter le markup spécifique.
+**Convention:** These templates intensively use **Twig Hooks** (`{% hook 'hook_name' %}`) to allow themes (like `BootstrapAdminUi`) to inject specific markup.
 
 ---
 
-## 4. Règles de Développement
+## 4. Development Rules
 
-1.  **Agnosticisme CSS :** Ne jamais inclure de classes CSS spécifiques (Bootstrap, Tailwind) dans les templates de ce module, sauf si elles sont purement utilitaires et standardisées. Le style doit être apporté par le thème parent ou le bundle d'implémentation.
-2.  **Extensibilité :** Tout nouveau template doit exposer des hooks clairs pour permettre la personnalisation.
-3.  **Contrats d'Interface :** Toujours préférer l'injection d'interfaces (ex: `MenuBuilderInterface`) plutôt que les classes concrètes.
-4.  **Nommage des Routes :** Préfixer toutes les routes par `sylius_admin_ui_`.
+1.  **CSS Agnosticism:** Never include specific CSS classes (Bootstrap, Tailwind) in this module's templates, unless they are purely utilitarian and standardized. Styling must be provided by the parent theme or implementation bundle.
+2.  **Extensibility:** Any new template must expose clear hooks to allow customization.
+3.  **Interface Contracts:** Always prefer injecting interfaces (e.g., `MenuBuilderInterface`) rather than concrete classes.
+4.  **Route Naming:** Prefix all routes with `sylius_admin_ui_`.
 
 ---
 
-**Note pour l'IA :** Lors de la modification de ce module, garde à l'esprit qu'il sert de fondation. Les changements ici impactent toutes les implémentations visuelles (BootstrapAdminUi, etc.).
+**Note for AI:** When modifying this module, keep in mind that it serves as a foundation. Changes here impact all visual implementations (BootstrapAdminUi, etc.).
