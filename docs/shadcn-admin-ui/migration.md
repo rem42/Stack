@@ -53,8 +53,10 @@ grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui" templates config
 | Change     | Hook / hookable                                                                     |
 |------------|-------------------------------------------------------------------------------------|
 | ➖ Removed | `toggle_button` hookable of the sidebar                                             |
+| ➖ Removed | `symfony_ux` hookables of `sylius_admin.base#stylesheets` and `sylius_admin.base#javascripts` (Stimulus and the Symfony UX controllers are started by the `admin` importmap entrypoint, the Tom Select styles are in `theme.css`) |
 | ➕ Added   | `sylius_admin.common.component.navbar.sidebar_trigger` (the toggle, now in the navbar) |
 | ➕ Added   | `sylius_admin.base#metatags.color_scheme`                                           |
+| ➕ Added   | `sylius_admin.base#stylesheets.themes` (the color themes, see [Theming](theming.md)) |
 
 {% hint style="info" %}
 List the hookables of a page to check your overrides:
