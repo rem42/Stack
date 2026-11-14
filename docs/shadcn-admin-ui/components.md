@@ -66,7 +66,7 @@ Same macro APIs as `@SyliusBootstrapAdminUi`: only the namespace changes.
 | `dropdown.html.twig`                             | `default(params)`, `list(params, items)`, `item(attributes, content, variant)` |
 | `table.html.twig`                                | `headers`, `row`                                                    |
 | `pagination.html.twig`                           | `simple(paginator, options)`, `results_count(paginator)`            |
-| `accordion.html.twig`                            | `accordion(items, open, auto_close, flush)`                         |
+| `accordion.html.twig`                            | `accordion(items, open, auto_close, flush)`: `auto_close: false` keeps several items open, no `flag` item option |
 | `avatar.html.twig`                               | `default(img, class, initials, size)`, `small(img, class, initials)` |
 | `palette.html.twig`                              | [`tone(color, kind)`](theming.md#the-tone-macro)                    |
 
@@ -121,6 +121,7 @@ Registered automatically by the bundle.
 | Identifier                                  | Role                                                             |
 |---------------------------------------------|------------------------------------------------------------------|
 | `admin--tabs`                               | Accessible tabs ([see above](#tabs))                             |
+| `admin--accordion`                          | Keeps a single item of the `accordion()` macro open              |
 | `admin--grid-selection`                     | Row selection, "select all", bulk action forms                   |
 | `admin--copy-to-clipboard`                  | Copy buttons                                                     |
 | `admin--dismissible`                        | Closable flash messages and alerts                               |
