@@ -49,6 +49,7 @@ grep -rlE "@Sylius${OldNs}AdminUi|sylius_${old_prefix}_admin_ui:" app templates 
 # The shadcn theme fully replaces the Tom Select stylesheet.
 perl -pi -e "s#(\"tom-select/dist/css/tom-select.default.css\": )(true|false)#\${1}${tom_select}#" assets/controllers.json
 
+rm -rf var/cache/*
 php bin/console cache:clear --quiet
 
 # PHP-FPM only revalidates the cached PHP files every 2 seconds (opcache.revalidate_freq): wait for the new container.

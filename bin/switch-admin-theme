@@ -98,6 +98,7 @@ if [[ ${#themes[@]} -gt 0 ]]; then
     printf '    themes: [%s]\n' "${list%, }" >> "$config"
 fi
 
+rm -rf var/cache/*
 php bin/console cache:clear --quiet
 
 # PHP-FPM only revalidates the cached PHP files every 2 seconds (opcache.revalidate_freq): wait for the new container.
