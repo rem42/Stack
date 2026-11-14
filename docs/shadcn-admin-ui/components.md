@@ -202,7 +202,6 @@ Classes copied outside the components must be synced **by hand**:
 - `shared/crud/index/content/grid/no_results.html.twig`: `Empty`
 - `shared/crud/index/content/grid/no_results/image.html.twig`: `Empty/Media`
 - `shared/helper/_checkbox.html.twig`: `Checkbox`
-- `shared/helper/accordion.html.twig`: `Card`
 - `shared/helper/dropdown.html.twig`: `DropdownMenu`
 - `shared/helper/header.html.twig`: `Empty/Media`
 - `shared/helper/sorting.html.twig`: `Table/Head`
