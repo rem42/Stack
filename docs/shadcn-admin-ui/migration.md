@@ -28,13 +28,26 @@ is a search and replace.
 
 4. **Rewrite Bootstrap classes** of your custom templates with Tailwind utilities.
 
-5. **Icons**: nothing to do. `tabler:*` names keep working through UX Icons; the theme itself uses `lucide:*`.
+5. **Replace the Bootstrap JavaScript**: it is not loaded, so the `data-bs-*` attributes of your templates stop
+   working, without any error.
+
+   | BootstrapAdminUi               | Shadcn Admin UI                                                     |
+   |--------------------------------|---------------------------------------------------------------------|
+   | `data-bs-toggle="modal"`       | `<twig:shadcn:Dialog>` or `<twig:shadcn:AlertDialog>`               |
+   | `data-bs-toggle="tab"`         | The `admin--tabs` controller (see [Tabs](components.md#tabs))       |
+   | `data-bs-toggle="dropdown"`    | `<twig:shadcn:DropdownMenu>` or the `dropdown` macros               |
+   | `data-bs-toggle="tooltip"`     | `<twig:shadcn:Tooltip>`, or a `title` attribute                     |
+   | `data-bs-toggle="collapse"`    | `<twig:shadcn:Collapsible>` or the `accordion` macro                |
+   | `data-bs-dismiss="modal"`      | `<twig:shadcn:AlertDialog:Cancel>`, or `dialog_close_attrs` of `<twig:shadcn:Dialog:Close>` on a button |
+   | `data-bs-dismiss="alert"`      | `data-controller="admin--dismissible"` on the alert and `data-action="admin--dismissible#close"` on its close button |
+
+6. **Icons**: nothing to do. `tabler:*` names keep working through UX Icons; the theme itself uses `lucide:*`.
 
 {% hint style="info" %}
 Find what is left to migrate:
 
 ```bash
-grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui" templates config
+grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui\|data-bs-" templates config
 ```
 {% endhint %}
 
@@ -53,8 +66,10 @@ grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui" templates config
 | Change     | Hook / hookable                                                                     |
 |------------|-------------------------------------------------------------------------------------|
 | ➖ Removed | `toggle_button` hookable of the sidebar                                             |
+| ➖ Removed | `symfony_ux` hookables of `sylius_admin.base#stylesheets` and `sylius_admin.base#javascripts` (Stimulus and the Symfony UX controllers are started by the `admin` importmap entrypoint, the Tom Select styles are in `theme.css`) |
 | ➕ Added   | `sylius_admin.common.component.navbar.sidebar_trigger` (the toggle, now in the navbar) |
 | ➕ Added   | `sylius_admin.base#metatags.color_scheme`                                           |
+| ➕ Added   | `sylius_admin.base#stylesheets.themes` (the color themes, see [Theming](theming.md)) |
 
 {% hint style="info" %}
 List the hookables of a page to check your overrides:

@@ -66,8 +66,8 @@ Same macro APIs as `@SyliusBootstrapAdminUi`: only the namespace changes.
 | `dropdown.html.twig`                             | `default(params)`, `list(params, items)`, `item(attributes, content, variant)` |
 | `table.html.twig`                                | `headers`, `row`                                                    |
 | `pagination.html.twig`                           | `simple(paginator, options)`, `results_count(paginator)`            |
-| `accordion.html.twig`                            | `accordion(items, open, auto_close, flush)`                         |
-| `avatar.html.twig`                               | `default(img, class, initials)`, `small(img, class, initials)`      |
+| `accordion.html.twig`                            | `accordion(items, open, auto_close, flush)`: `auto_close: false` keeps several items open, no `flag` item option |
+| `avatar.html.twig`                               | `default(img, class, initials, size)`, `small(img, class, initials)` |
 | `palette.html.twig`                              | [`tone(color, kind)`](theming.md#the-tone-macro)                    |
 
 The button macros accept an extra `variant` param: `default`, `secondary`, `outline`, `ghost`, `destructive`, `link`.
@@ -121,6 +121,7 @@ Registered automatically by the bundle.
 | Identifier                                  | Role                                                             |
 |---------------------------------------------|------------------------------------------------------------------|
 | `admin--tabs`                               | Accessible tabs ([see above](#tabs))                             |
+| `admin--accordion`                          | Keeps a single item of the `accordion()` macro open              |
 | `admin--grid-selection`                     | Row selection, "select all", bulk action forms                   |
 | `admin--copy-to-clipboard`                  | Copy buttons                                                     |
 | `admin--dismissible`                        | Closable flash messages and alerts                               |
@@ -180,27 +181,31 @@ To add a new recipe, pass its name.
 The files are **overwritten**: `git diff` shows both the changes of the kit and the local changes of the bundle that
 were lost. Keep the former, restore the latter (`git checkout -p`).
 
-Local changes to restore after an update (as of UX Toolkit 3.6):
+Local changes to restore after an update (as of UX Toolkit 3.7):
 
 | File                                                       | Local change                                                                 |
 |------------------------------------------------------------|------------------------------------------------------------------------------|
 | `DropdownMenu/{Item,CheckboxItem,RadioItem,SubTrigger}`    | `cursor-pointer` instead of `cursor-default`                                 |
-| `DropdownMenu/Content`                                     | `left` / `right` sides combined with `align` (`start`, `center`, `end`)      |
 | `dropdown_menu_controller.js`                              | A pointer click focuses the menu, not its first item (no highlighted item)   |
-| `Sidebar`                                                  | Nested sidebar (`sidebar.nested`: `<div>` instead of `<aside>`), `p-2` around `floating` / `inset` |
-| `Sidebar/Content`                                          | Hidden scrollbar, no overflow clipping while a dropdown menu is open         |
-| `Sidebar/GroupLabel`                                       | `as` prop (`div` or `button`, to toggle a `Collapsible`)                     |
-| `Sidebar/MenuButton`                                       | `[&_svg]` instead of `[&>svg]` (nested icons are sized too)                  |
 
 Update this table when you add or drop a local change.
 
 {% hint style="warning" %}
 Classes copied outside the components must be synced **by hand**:
 
-- `shared/helper/ui.html.twig`
-- `shared/form_theme.html.twig`
-- `shared/crud/common/sidebar/menu/menu.html.twig`
-- `shared/pagerfanta.html.twig`
+- `shared/helper/ui.html.twig`: `Button`
+- `shared/form_theme.html.twig`: `Field`, `Input`, `Checkbox`, `Switch`, `NativeSelect`, `Alert`
+- `shared/crud/common/sidebar/menu/menu.html.twig`: `Sidebar`, `Collapsible`
+- `shared/pagerfanta.html.twig`: `Pagination`, `Button`
+- `shared/components/badge.html.twig`: `Badge`
+- `shared/components/confirmation_modal.html.twig`: `AlertDialog`, `Dialog/Footer`
+- `shared/crud/index/content/grid/filters.html.twig`: `Card`, `Collapsible`
+- `shared/crud/index/content/grid/no_results.html.twig`: `Empty`
+- `shared/crud/index/content/grid/no_results/image.html.twig`: `Empty/Media`
+- `shared/helper/_checkbox.html.twig`: `Checkbox`
+- `shared/helper/header.html.twig`: `Empty/Media`
+- `shared/helper/sorting.html.twig`: `Table/Head`
+- `shared/helper/table.html.twig`: `Table`
 {% endhint %}
 
 ### 4. Check

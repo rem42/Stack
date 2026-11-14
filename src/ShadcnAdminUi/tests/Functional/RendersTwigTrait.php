@@ -18,16 +18,22 @@ use Twig\Environment;
 
 trait RendersTwigTrait
 {
-    private function render(string $template): string
+    /**
+     * @param array<string, mixed> $context
+     */
+    private function render(string $template, array $context = []): string
     {
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
 
-        return $twig->createTemplate($template)->render();
+        return $twig->createTemplate($template)->render($context);
     }
 
-    private function crawl(string $template): Crawler
+    /**
+     * @param array<string, mixed> $context
+     */
+    private function crawl(string $template, array $context = []): Crawler
     {
-        return new Crawler($this->render($template));
+        return new Crawler($this->render($template, $context));
     }
 }

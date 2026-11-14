@@ -25,15 +25,15 @@ sylius_twig_hooks:
         'sylius_admin.common.component.sidebar.logo':
             image:
                 configuration:
-                    name: 'Camalo'
-                    subtitle: 'WMS'
-                    icon: 'lucide:warehouse'   # or image: 'images/logo.svg'
+                    name: 'Acme'
+                    subtitle: 'Back office'
+                    icon: 'lucide:store'   # or image: 'images/logo.svg'
         'sylius_admin.security.login.page.logo':
             image:
-                configuration: { name: 'Camalo', icon: 'lucide:warehouse' }
+                configuration: { name: 'Acme', icon: 'lucide:store' }
         'sylius_admin.base#base_title':
             default:
-                configuration: { title: 'Camalo' }
+                configuration: { title: 'Acme' }
 ```
 {% endcode %}
 

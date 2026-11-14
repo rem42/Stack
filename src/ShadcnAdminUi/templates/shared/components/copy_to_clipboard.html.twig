@@ -15,11 +15,11 @@
     errorLabel: error_label|trans,
 }) }}>
     <button
+        class="{{ button_class ?? ui_button_class('ghost', 'icon-xs', 'text-muted-foreground') }}{% if attributes.has('class') %} {{ attributes.render('class') }}{% endif %}"
         {{ attributes
             .defaults(stimulus_action('admin--copy-to-clipboard', 'copy'))
             .defaults({
                 type: 'button',
-                class: button_class ?? ui_button_class('ghost', 'icon-xs', 'text-muted-foreground'),
                 disabled: disabled or value is null or value is same as(''),
                 'aria-label': copy_label|trans,
                 title: copy_label|trans,

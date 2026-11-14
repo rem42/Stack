@@ -5,8 +5,6 @@
  # Inner hooks: "filters#trigger" (inside the trigger, after its title) and "filters#summary" (between the trigger
  # and the form, visible when the panel is collapsed).
  #}
-{% from '@SyliusShadcnAdminUi/shared/helper/ui.html.twig' import button_class %}
-
 {% set resources = resources|default(hookable_metadata.context.resources|default(null)) %}
 {% set path = path(app.request.attributes.get('_route'), app.request.attributes.all('_route_params')) %}
 {% set criteria = app.request.query.all('criteria') %}
@@ -53,14 +51,14 @@
                     {% endfor %}
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                    <button type="submit" class="{{ button_class('default') }}" {{ sylius_test_html_attribute('filter') }}>
+                    <twig:shadcn:Button type="submit" {{ ...sylius_test_form_attribute('filter').attr|default({}) }}>
                         {{ ux_icon('lucide:filter', {'data-icon': 'inline-start', 'aria-hidden': 'true'}) }}
                         {{ 'sylius.ui.filter'|trans }}
-                    </button>
-                    <a href="{{ path }}" class="{{ button_class('ghost') }}" {{ sylius_test_html_attribute('reset') }}>
+                    </twig:shadcn:Button>
+                    <twig:shadcn:Button as="a" variant="ghost" href="{{ path }}" {{ ...sylius_test_form_attribute('reset').attr|default({}) }}>
                         {{ ux_icon('lucide:rotate-ccw', {'data-icon': 'inline-start', 'aria-hidden': 'true'}) }}
                         {{ 'sylius.ui.reset'|trans }}
-                    </a>
+                    </twig:shadcn:Button>
                 </div>
             </form>
         </div>
