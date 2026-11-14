@@ -192,10 +192,27 @@ Update this table when you add or drop a local change.
 {% hint style="warning" %}
 Classes copied outside the components must be synced **by hand**:
 
-- `shared/helper/ui.html.twig`
-- `shared/form_theme.html.twig`
-- `shared/crud/common/sidebar/menu/menu.html.twig`
-- `shared/pagerfanta.html.twig`
+- `shared/helper/ui.html.twig`: `Button`
+- `shared/form_theme.html.twig`: `Field`, `Input`, `Checkbox`, `Switch`, `NativeSelect`, `Alert`
+- `shared/crud/common/sidebar/menu/menu.html.twig`: `Sidebar`, `Collapsible`
+- `shared/pagerfanta.html.twig`: `Pagination`, `Button`
+- `shared/components/badge.html.twig`: `Badge`
+- `shared/components/confirmation_modal.html.twig`: `AlertDialog`, `Dialog/Footer`
+- `shared/crud/common/content/form_error_alert.html.twig`: `Alert`
+- `security/login/page/content/form/error.html.twig`: `Alert`
+- `shared/crud/common/sidebar/search.html.twig`: `Input`
+- `shared/crud/index/content/grid/data_table.html.twig`: `Card`, `Table`
+- `shared/crud/index/content/grid/filters.html.twig`: `Card`
+- `shared/crud/index/content/grid/no_results.html.twig`: `Empty`
+- `shared/crud/index/content/grid/no_results/image.html.twig`: `Empty/Media`
+- `shared/helper/_checkbox.html.twig`: `Checkbox`
+- `shared/helper/accordion.html.twig`: `Card`
+- `shared/helper/avatar.html.twig`: `Avatar`
+- `shared/helper/breadcrumbs.html.twig`: `Breadcrumb`
+- `shared/helper/dropdown.html.twig`: `DropdownMenu`
+- `shared/helper/header.html.twig`: `Empty/Media`
+- `shared/helper/sorting.html.twig`: `Table/Head`
+- `shared/helper/table.html.twig`: `Table`
 {% endhint %}
 
 ### 4. Check
