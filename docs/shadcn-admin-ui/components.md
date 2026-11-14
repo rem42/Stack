@@ -180,17 +180,12 @@ To add a new recipe, pass its name.
 The files are **overwritten**: `git diff` shows both the changes of the kit and the local changes of the bundle that
 were lost. Keep the former, restore the latter (`git checkout -p`).
 
-Local changes to restore after an update (as of UX Toolkit 3.6):
+Local changes to restore after an update (as of UX Toolkit 3.7):
 
 | File                                                       | Local change                                                                 |
 |------------------------------------------------------------|------------------------------------------------------------------------------|
 | `DropdownMenu/{Item,CheckboxItem,RadioItem,SubTrigger}`    | `cursor-pointer` instead of `cursor-default`                                 |
-| `DropdownMenu/Content`                                     | `left` / `right` sides combined with `align` (`start`, `center`, `end`)      |
 | `dropdown_menu_controller.js`                              | A pointer click focuses the menu, not its first item (no highlighted item)   |
-| `Sidebar`                                                  | Nested sidebar (`sidebar.nested`: `<div>` instead of `<aside>`), `p-2` around `floating` / `inset` |
-| `Sidebar/Content`                                          | Hidden scrollbar, no overflow clipping while a dropdown menu is open         |
-| `Sidebar/GroupLabel`                                       | `as` prop (`div` or `button`, to toggle a `Collapsible`)                     |
-| `Sidebar/MenuButton`                                       | `[&_svg]` instead of `[&>svg]` (nested icons are sized too)                  |
 
 Update this table when you add or drop a local change.
 
