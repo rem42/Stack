@@ -67,7 +67,7 @@ Same macro APIs as `@SyliusBootstrapAdminUi`: only the namespace changes.
 | `table.html.twig`                                | `headers`, `row`                                                    |
 | `pagination.html.twig`                           | `simple(paginator, options)`, `results_count(paginator)`            |
 | `accordion.html.twig`                            | `accordion(items, open, auto_close, flush)`                         |
-| `avatar.html.twig`                               | `default(img, class, initials)`, `small(img, class, initials)`      |
+| `avatar.html.twig`                               | `default(img, class, initials, size)`, `small(img, class, initials)` |
 | `palette.html.twig`                              | [`tone(color, kind)`](theming.md#the-tone-macro)                    |
 
 The button macros accept an extra `variant` param: `default`, `secondary`, `outline`, `ghost`, `destructive`, `link`.
@@ -205,7 +205,6 @@ Classes copied outside the components must be synced **by hand**:
 - `shared/crud/index/content/grid/no_results/image.html.twig`: `Empty/Media`
 - `shared/helper/_checkbox.html.twig`: `Checkbox`
 - `shared/helper/accordion.html.twig`: `Card`
-- `shared/helper/avatar.html.twig`: `Avatar`
 - `shared/helper/dropdown.html.twig`: `DropdownMenu`
 - `shared/helper/header.html.twig`: `Empty/Media`
 - `shared/helper/sorting.html.twig`: `Table/Head`
