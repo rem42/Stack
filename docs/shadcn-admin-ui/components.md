@@ -198,7 +198,6 @@ Classes copied outside the components must be synced **by hand**:
 - `shared/pagerfanta.html.twig`: `Pagination`, `Button`
 - `shared/components/badge.html.twig`: `Badge`
 - `shared/components/confirmation_modal.html.twig`: `AlertDialog`, `Dialog/Footer`
-- `shared/crud/common/sidebar/search.html.twig`: `Input`
 - `shared/crud/index/content/grid/data_table.html.twig`: `Card`, `Table`
 - `shared/crud/index/content/grid/filters.html.twig`: `Card`
 - `shared/crud/index/content/grid/no_results.html.twig`: `Empty`
