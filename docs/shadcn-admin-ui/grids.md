@@ -10,6 +10,14 @@ Sylius grids are rendered as a shadcn data table with:
 - filters `string`, `boolean`, `date`, `enum`, `entity`, `exists`, `select`;
 - a card layout below the `md` breakpoint.
 
+The `class` option of an `apply_transition` action colors its (single-color) icon with a
+[palette](theming.md#the-tone-macro) color: `success`, `danger`, `warning`, `info`, `green`, `red`… The `outline-` and
+`ghost-` prefixes of BootstrapAdminUi are ignored, and an unknown color renders as `secondary`.
+
+```php
+ApplyTransitionAction::create(name: 'accept', route: 'app_admin_application_accept', options: ['class' => 'success']);
+```
+
 ## Column options
 
 Cells are `whitespace-nowrap`: the table scrolls horizontally when needed. A field's `vars` option accepts:
