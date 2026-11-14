@@ -206,7 +206,6 @@ Classes copied outside the components must be synced **by hand**:
 - `shared/helper/_checkbox.html.twig`: `Checkbox`
 - `shared/helper/accordion.html.twig`: `Card`
 - `shared/helper/avatar.html.twig`: `Avatar`
-- `shared/helper/breadcrumbs.html.twig`: `Breadcrumb`
 - `shared/helper/dropdown.html.twig`: `DropdownMenu`
 - `shared/helper/header.html.twig`: `Empty/Media`
 - `shared/helper/sorting.html.twig`: `Table/Head`
