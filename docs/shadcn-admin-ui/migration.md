@@ -28,13 +28,26 @@ is a search and replace.
 
 4. **Rewrite Bootstrap classes** of your custom templates with Tailwind utilities.
 
-5. **Icons**: nothing to do. `tabler:*` names keep working through UX Icons; the theme itself uses `lucide:*`.
+5. **Replace the Bootstrap JavaScript**: it is not loaded, so the `data-bs-*` attributes of your templates stop
+   working, without any error.
+
+   | BootstrapAdminUi               | Shadcn Admin UI                                                     |
+   |--------------------------------|---------------------------------------------------------------------|
+   | `data-bs-toggle="modal"`       | `<twig:shadcn:Dialog>` or `<twig:shadcn:AlertDialog>`               |
+   | `data-bs-toggle="tab"`         | The `admin--tabs` controller (see [Tabs](components.md#tabs))       |
+   | `data-bs-toggle="dropdown"`    | `<twig:shadcn:DropdownMenu>` or the `dropdown` macros               |
+   | `data-bs-toggle="tooltip"`     | `<twig:shadcn:Tooltip>`, or a `title` attribute                     |
+   | `data-bs-toggle="collapse"`    | `<twig:shadcn:Collapsible>` or the `accordion` macro                |
+   | `data-bs-dismiss="modal"`      | `<twig:shadcn:AlertDialog:Cancel>`, or `dialog_close_attrs` of `<twig:shadcn:Dialog:Close>` on a button |
+   | `data-bs-dismiss="alert"`      | `data-controller="admin--dismissible"` on the alert and `data-action="admin--dismissible#close"` on its close button |
+
+6. **Icons**: nothing to do. `tabler:*` names keep working through UX Icons; the theme itself uses `lucide:*`.
 
 {% hint style="info" %}
 Find what is left to migrate:
 
 ```bash
-grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui" templates config
+grep -rn "SyliusBootstrapAdminUi\|sylius_bootstrap_admin_ui\|data-bs-" templates config
 ```
 {% endhint %}
 
