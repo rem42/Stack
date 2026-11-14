@@ -98,4 +98,18 @@ final class DropdownMacroTest extends KernelTestCase
         self::assertSame('destructive', $item->attr('data-variant'));
         self::assertSame('Delete', trim($item->text()));
     }
+
+    public function testTheCustomTriggerOpensTheMenuWithEnterAndSpace(): void
+    {
+        $crawler = $this->crawl(<<<'TWIG'
+            {% import '@SyliusShadcnAdminUi/shared/helper/dropdown.html.twig' as dropdown %}
+            {{ dropdown.default({id: 'row', customTrigger: 'More'}) }}
+            TWIG);
+
+        $actions = explode(' ', (string) $crawler->filter('#dropdown-menu-row-trigger')->attr('data-action'));
+        self::assertContains('click->shadcn--dropdown-menu#toggle', $actions);
+        self::assertContains('keydown.enter->shadcn--dropdown-menu#toggle', $actions);
+        self::assertContains('keydown.space->shadcn--dropdown-menu#onTriggerKeydown:prevent', $actions);
+        self::assertContains('keyup.space->shadcn--dropdown-menu#toggle', $actions);
+    }
 }
