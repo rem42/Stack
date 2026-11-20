@@ -1,4 +1,5 @@
-{% set session = _context.app.session|default(null) %}
+{# ?? and not |default: an empty Session (no attribute, only flashes) counts as empty. #}
+{% set session = _context.app.session ?? null %}
 
 {% if session is not null and session.started and session.flashbag.peekAll|length > 0 %}
     {% set styles = {
